@@ -12,12 +12,16 @@ const Footer = () => {
             <div className="w-full px-4 md:w-1/2 lg:w-5/12">
               <div className="mb-12 max-w-[400px] lg:mb-16">
                 <Link href="/" className="mb-6 inline-block">
-                  <div className="text-2xl font-bold text-primary">
-                    ST. JUDE'S
-                  </div>
+                  <Image
+                    src="/AMIG.png"
+                    alt="logo"
+                    width={180}
+                    height={50}
+                    className="w-full h-auto"
+                  />
                 </Link>
-                <h3 className="mb-4 text-lg font-bold text-black">
-                  St. Jude's International School
+                <h3 className="mb-4 text-lg font-bold text-black uppercase">
+                  Arun Muchhala International Group
                 </h3>
                 <p className="mb-6 text-base leading-relaxed text-body-color">
                   Empowering Minds for a Brighter Future - Excellence in Holistic Education & Global Leadership
@@ -199,7 +203,7 @@ const Footer = () => {
           <div className="h-px w-full bg-gradient-to-r from-transparent via-orange-200 to-transparent"></div>
           <div className="py-8">
             <p className="text-center text-sm text-body-color">
-              © {new Date().getFullYear()} St. Jude's International School. All rights reserved.
+              © {new Date().getFullYear()} Arun Muchhala International Group. All rights reserved.
             </p>
           </div>
         </div>
