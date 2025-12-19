@@ -63,7 +63,7 @@ const Header = () => {
         <div className={`w-full bg-white transition-all duration-300 ${sticky ? "shadow-md py-1 lg:py-2" : "py-1.5 lg:py-4"}`}>
           <div className="container">
             <div className="relative -mx-4 flex items-center justify-between">
-              <div className="w-32 sm:w-60 max-w-full px-4 xl:mr-12">
+              <div className="w-56 sm:w-[350px] max-w-full px-4 xl:mr-12">
                 <Link
                   href="/"
                   className="header-logo block w-full"
@@ -71,8 +71,8 @@ const Header = () => {
                   <Image
                     src="/AMIG.png"
                     alt="logo"
-                    width={180}
-                    height={50}
+                    width={350}
+                    height={85}
                     className="w-full h-auto"
                   />
                 </Link>
