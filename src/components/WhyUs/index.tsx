@@ -1,97 +1,194 @@
+"use client";
+import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+
 const whyUsData = [
   {
     id: 1,
     title: "Academic Rigor",
-    description: "Our curriculum is designed to challenge students and foster a deep love for lifelong learning and intellectual curiosity.",
+    description: "Curriculum designed to challenge students and foster intellectual curiosity.",
     icon: (
-      <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+      <svg className="h-6 w-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
       </svg>
     ),
   },
   {
     id: 2,
     title: "Character Building",
-    description: "We emphasize core values of integrity, empathy, and resilience, preparing students to be ethical global citizens.",
+    description: "Emphasis on integrity, empathy, and resilience for ethical global citizenship.",
     icon: (
-      <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+      <svg className="h-6 w-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
       </svg>
     ),
   },
   {
     id: 3,
     title: "World-Class Facilities",
-    description: "From modern labs to creative studios and expansive sports grounds, our campus provides the ideal environment for growth.",
+    description: "Modern labs, creative studios, and expansive sports grounds for holistic growth.",
     icon: (
-      <svg className="h-8 w-8 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+      <svg className="h-6 w-6 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
       </svg>
     ),
   },
 ];
 
+const stats = [
+  { id: 1, value: 2500, label: "Students Worldwide", suffix: "+" },
+  { id: 2, value: 150, label: "Expert Teachers", suffix: "+" },
+  { id: 3, value: 25, label: "Years Excellence", suffix: "+" },
+  { id: 4, value: 100, label: "University Placement", suffix: "%" },
+];
+
+const useCounter = (end: number, duration: number = 2000, start = 0) => {
+  const [count, setCount] = useState(start);
+  const countRef = useRef<HTMLDivElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (countRef.current) {
+      observer.observe(countRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let startTime: number | null = null;
+    let animationFrame: number;
+
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * (end - start) + start));
+
+      if (progress < 1) {
+        animationFrame = requestAnimationFrame(step);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(step);
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, [end, duration, start, isVisible]);
+
+  return { count, countRef };
+};
+
+const CounterItem = ({ item }: { item: typeof stats[0] }) => {
+  const { count, countRef } = useCounter(item.value);
+
+  return (
+    <div ref={countRef} className="text-center group">
+      <div className="relative inline-block">
+        <div className="text-4xl lg:text-5xl font-bold text-black font-serif z-10 relative">
+          {count}
+          {item.suffix}
+        </div>
+        <div className="absolute bottom-1 left-0 w-full h-3 bg-yellow-300 opacity-60 -z-10 transform skew-x-12"></div>
+      </div>
+      <p className="mt-3 text-sm font-medium text-gray-600 uppercase tracking-wide">
+        {item.label}
+      </p>
+    </div>
+  );
+};
+
 const WhyUs = () => {
   return (
-    <section className="relative bg-white py-16 md:py-20 lg:py-28">
-      <div className="container">
-        <div className="-mx-4 flex flex-wrap items-center">
-          {/* Text Content */}
-          <div className="w-full px-4 lg:w-1/2">
-            <div className="mb-12 max-w-[540px] lg:mb-0">
-              <h2 className="mb-5 text-3xl font-bold leading-tight text-primary sm:text-4xl">
-                Why Choose <span className="text-black">St. Jude's International School?</span>
-              </h2>
-              <p className="mb-10 text-base leading-relaxed text-body-color md:text-lg">
-                At St. Jude's, we believe in a transformative educational experience that goes beyond textbooks.
-                Our holistic approach ensures that students are not only academically proficient but also
-                compassionate leaders of tomorrow.
-              </p>
+    <section className="py-20 lg:py-28 bg-white overflow-hidden">
+      <div className="container px-4 mx-auto">
+        <div className="flex flex-col lg:flex-row items-center gap-16 lg:gap-24 mb-24">
+          
+          {/* Left Content */}
+          <div className="w-full lg:w-1/2">
+            <span className="inline-block py-1 px-3 mb-6 text-xs font-semibold tracking-widest text-orange-600 uppercase bg-orange-50 rounded-full">
+              Why Choose St. Jude's?
+            </span>
+            <h2 className="mb-8 text-4xl lg:text-5xl font-bold text-black font-serif leading-tight">
+              Empowering Minds,<br />
+              <span className="relative inline-block">
+                Shaping Souls.
+                <svg className="absolute w-full h-3 -bottom-1 left-0 text-yellow-300 -z-10" viewBox="0 0 200 9" fill="currentcolor"><path d="M2.00025 6.99997C25.7509 2.99997 83.2505 5.49997 125.751 2.99997C191.251 -0.500027 245.286 1.05041 196.251 5.49997C147.215 9.94953 25.7509 8.99999 2.00025 6.99997Z"></path></svg>
+              </span>
+            </h2>
+            
+            <div className="space-y-8 mb-10">
+              {whyUsData.map((item) => (
+                <div key={item.id} className="flex gap-5">
+                   <div className="flex-shrink-0 mt-1">
+                      <div className="flex items-center justify-center w-12 h-12 rounded-full bg-orange-50 text-orange-600 border border-orange-100">
+                        {item.icon}
+                      </div>
+                   </div>
+                   <div>
+                      <h3 className="text-xl font-bold text-black mb-2">{item.title}</h3>
+                      <p className="text-gray-600 leading-relaxed text-sm lg:text-base">{item.description}</p>
+                   </div>
+                </div>
+              ))}
+            </div>
 
-              <div className="space-y-8">
-                {whyUsData.map((item) => (
-                  <div key={item.id} className="flex items-start">
-                    <div className="mr-5 flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-xl bg-orange-100 shadow-sm transition-transform hover:scale-110">
-                      {item.icon}
-                    </div>
-                    <div>
-                      <h3 className="mb-2 text-xl font-bold text-black">{item.title}</h3>
-                      <p className="text-base text-body-color">{item.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="flex flex-wrap gap-4">
+              <button className="px-8 py-4 text-sm font-bold text-white uppercase bg-black rounded-full hover:bg-gray-800 transition-colors">
+                Explore More →
+              </button>
+              <button className="px-8 py-4 text-sm font-bold text-black uppercase bg-transparent border border-gray-200 rounded-full hover:bg-gray-50 transition-colors">
+                Get a Quote →
+              </button>
             </div>
           </div>
 
-          {/* Image/Highlight Card */}
-          <div className="w-full px-4 lg:w-1/2">
-            <div className="relative z-10 mx-auto max-w-[500px] lg:mr-0">
-              <div className="aspect-square overflow-hidden rounded-2xl bg-orange-600 shadow-2xl">
-                {/* Award Label Overlay */}
-                <div className="absolute top-6 left-6 z-20 rounded-lg bg-white/90 p-4 shadow-lg backdrop-blur-sm">
-                  <p className="text-xs font-bold uppercase tracking-widest text-primary">Award Winning</p>
-                  <p className="text-lg font-bold text-black font-serif">Education Excellence 2024</p>
-                </div>
-
-                {/* Decorative background for placeholder */}
-                <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-orange-500 to-orange-700 p-12 text-center text-white">
-                  <div>
-                    <svg className="mx-auto mb-6 h-20 w-20 opacity-50" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5.25 8.051a.999.999 0 01.356-.257l4-1.714a1 1 0 11.788 1.838L7.667 9.088l1.94.831a1 1 0 00.787 0l7-3a1 1 0 000-1.838l-7-3zM3.31 9.397L5 10.12v4.102a8.969 8.969 0 00-1.05-.174 1 1 0 01-.89-.89 11.115 11.115 0 01.25-3.762zM9.3 16.573A9.026 9.026 0 007 14.935v-3.957l1.818.78a3 3 0 002.364 0l5.508-2.361a11.026 11.026 0 01.25 3.762 1 1 0 01-.89.89 8.968 8.968 0 00-5.35 2.524 1 1 0 01-1.4 0zM6 18a1 1 0 001-1v-2.065a8.935 8.935 0 00-2 .712V17a1 1 0 001 1z" />
-                    </svg>
-                    <h3 className="mb-2 text-2xl font-bold italic font-serif">"Empowering Minds, Shaping Souls"</h3>
-                    <p className="text-sm opacity-80 uppercase tracking-widest font-semibold font-sans">Our Founding Motto</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Decorative Blur Backgrounds */}
-              <div className="absolute -bottom-10 -left-10 -z-10 h-64 w-64 bg-orange-400 opacity-20 blur-3xl" />
-              <div className="absolute -top-10 -right-10 -z-10 h-64 w-64 bg-orange-100 opacity-30 blur-3xl" />
+          {/* Right Images (Overlapping) */}
+          <div className="w-full lg:w-1/2 relative min-h-[500px] lg:min-h-[600px]">
+             {/* Main Back Image (School Building) */}
+            <div className="absolute top-0 right-0 w-4/5 h-4/5 rounded-3xl overflow-hidden shadow-2xl z-10">
+              <Image 
+                src="/images/why-us/school-building.png"
+                alt="Modern School Building"
+                fill
+                className="object-cover"
+              />
             </div>
+            
+            {/* Overlapping Front Image (Student) */}
+            <div className="absolute bottom-0 left-0 w-3/5 h-3/5 rounded-3xl overflow-hidden shadow-2xl border-[8px] border-white z-20">
+              <Image
+                src="/images/why-us/students-learning.png"
+                alt="Students Learning"
+                fill
+                className="object-cover"
+              />
+            </div>
+
+            {/* Decorative Elements */}
+            <div className="absolute top-10 right-10 w-20 h-20 bg-yellow-300 rounded-full blur-3xl opacity-20 z-0"></div>
+            <div className="absolute bottom-10 left-10 w-32 h-32 bg-orange-400 rounded-full blur-3xl opacity-20 z-0"></div>
           </div>
+
         </div>
+
+        {/* Stats Section - Bottom Row */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-16 border-t border-gray-100">
+          {stats.map((stat) => (
+             <CounterItem key={stat.id} item={stat} />
+          ))}
+        </div>
+
       </div>
     </section>
   );
